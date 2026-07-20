@@ -25,24 +25,50 @@ export function useTasks() {
     setLoading(false);
   }
 
-  async function createTask(title: string) {
+  async function createTask(taskData: {
+    title: string;
+    description?: string;
+    priority: "low" | "normal" | "high";
+    due_date?: string;
+  }) {
     const { data: user } = await supabase.auth.getUser();
 
-    const { error } = await supabase.from("tasks").insert({
-      title,
+    const { data, error } = await supabase
+      .from("tasks")
+      .insert({
+        title: taskData.title,
 
-      status: "todo",
+        description: taskData.description,
 
-      priority: "normal",
+        priority: taskData.priority,
 
-      user_id: user.user?.id,
-    });
+        due_date: taskData.due_date,
+
+        status: "todo",
+
+        user_id: user.user?.id,
+      })
+      .select()
+      .single();
 
     if (error) {
       console.error(error);
-    } else {
-      loadTasks();
+
+      return;
     }
+
+    setTasks((prev) => [data, ...prev]);
+  }
+  async function deleteTask(id: string) {
+    const { error } = await supabase.from("tasks").delete().eq("id", id);
+
+    if (error) {
+      console.error(error);
+
+      return;
+    }
+
+    setTasks((prev) => prev.filter((task) => task.id !== id));
   }
 
   async function updateStatus(id: string, status: TaskStatus) {
@@ -81,5 +107,6 @@ export function useTasks() {
     createTask,
 
     updateStatus,
+    deleteTask,
   };
 }

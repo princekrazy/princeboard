@@ -2,12 +2,14 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
 import type { Task } from "../../types/database";
-
+import { useBoardStore } from "../../store/boardStore";
+import { Grip } from "lucide-react";
 interface Props {
   task: Task;
 }
 
 export default function TaskCard({ task }: Props) {
+  const openTask = useBoardStore((state) => state.openTask);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: task.id,
@@ -21,10 +23,9 @@ export default function TaskCard({ task }: Props) {
 
   return (
     <motion.div
+      onClick={() => openTask(task)}
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       whileHover={{
         y: -3,
       }}
@@ -34,20 +35,28 @@ text-white
 rounded-xl
 p-4
 mb-3
-cursor-grab
 border
 border-white/10
 shadow-lg
 "
     >
-      <h3
-        className="
+      <div className="flex justify-between items-start mb-3">
+        <h3
+          className="
 font-medium
 "
-      >
-        {task.title}
-      </h3>
-
+        >
+          {task.title}
+        </h3>
+        <button
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Grip size={18} />
+        </button>
+      </div>
       <span
         className={`
 text-xs

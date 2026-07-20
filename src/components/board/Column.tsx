@@ -26,6 +26,7 @@ bg-[#111827]
 rounded-2xl
 p-4
 min-h-[550px]
+w-full
 "
     >
       <div

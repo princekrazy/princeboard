@@ -1,5 +1,11 @@
-import { DndContext } from "@dnd-kit/core";
-import type { DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { DragOverlay } from "@dnd-kit/core";
 
 import Column from "./Column";
 
@@ -7,14 +13,31 @@ import { columns } from "../../constants/columns";
 
 import { useTasks } from "../../hooks/useTasks";
 import type { TaskStatus } from "../../types/database";
+import { useState } from "react";
+import type { Task } from "../../types/database";
 
+import CreateTaskModal from "../tasks/CreateTaskModal";
+
+import { Plus } from "lucide-react";
+import TaskDetails from "../tasks/TaskDetails";
 export default function KanbanBoard() {
+  const { deleteTask } = useTasks();
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 2,
+      },
+    }),
+  );
+  const [open, setOpen] = useState(false);
   const {
     tasks,
 
     loading,
 
     updateStatus,
+    createTask,
   } = useTasks();
 
   if (loading)
@@ -28,21 +51,62 @@ p-10
         Loading...
       </div>
     );
+  function handleDragStart(event: DragStartEvent) {
+    const task = tasks.find((task) => task.id === event.active.id);
+
+    setActiveTask(task || null);
+  }
 
   function handleDragEnd(event: DragEndEvent) {
+    setActiveTask(null);
+
     const { active, over } = event;
 
     if (!over) return;
 
     const taskId = active.id.toString();
 
-    const destination = over.id as TaskStatus;
+    const destination = over.id.toString();
 
-    updateStatus(taskId, destination);
+    const validStatuses: TaskStatus[] = [
+      "todo",
+      "in_progress",
+      "in_review",
+      "done",
+    ];
+
+    if (!validStatuses.includes(destination as TaskStatus)) {
+      return;
+    }
+
+    updateStatus(taskId, destination as TaskStatus);
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={() => setActiveTask(null)}
+    >
+      <DragOverlay>
+        {activeTask && (
+          <div
+            className="
+      bg-[#151B2B]
+      text-white
+      rounded-xl
+      p-4
+      border
+      border-white/10
+      shadow-xl
+      w-[300px]
+      "
+          >
+            {activeTask.title}
+          </div>
+        )}
+      </DragOverlay>
       <div
         className="
 min-h-screen
@@ -60,6 +124,42 @@ mb-8
         >
           FlowBoard
         </h1>
+        <div
+          className="
+flex
+justify-between
+items-center
+mb-8
+"
+        >
+          <h1
+            className="
+text-3xl
+font-bold
+text-white
+"
+          >
+            FlowBoard
+          </h1>
+
+          <button
+            onClick={() => setOpen(true)}
+            className="
+flex
+items-center
+gap-2
+bg-indigo-600
+text-white
+px-4
+py-2
+rounded-xl
+hover:bg-indigo-700
+"
+          >
+            <Plus size={18} />
+            New Task
+          </button>
+        </div>
 
         <div
           className="
@@ -79,7 +179,13 @@ gap-6
             />
           ))}
         </div>
+        <CreateTaskModal
+          open={open}
+          close={() => setOpen(false)}
+          createTask={createTask}
+        />
       </div>
+      <TaskDetails deleteTask={deleteTask} />
     </DndContext>
   );
 }
