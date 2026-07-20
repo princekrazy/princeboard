@@ -1,72 +1,85 @@
+import { DndContext } from "@dnd-kit/core";
+import type { DragEndEvent } from "@dnd-kit/core";
+
+import Column from "./Column";
+
 import { columns } from "../../constants/columns";
+
 import { useTasks } from "../../hooks/useTasks";
+import type { TaskStatus } from "../../types/database";
 
 export default function KanbanBoard() {
-  const { tasks, loading, createTask } = useTasks();
+  const {
+    tasks,
 
-  if (loading) {
-    return <p>Loading board...</p>;
+    loading,
+
+    updateStatus,
+  } = useTasks();
+
+  if (loading)
+    return (
+      <div
+        className="
+text-white
+p-10
+"
+      >
+        Loading...
+      </div>
+    );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const taskId = active.id.toString();
+
+    const destination = over.id as TaskStatus;
+
+    updateStatus(taskId, destination);
   }
 
   return (
-    <div
-      className="
-grid 
-grid-cols-4 
-gap-5
+    <DndContext onDragEnd={handleDragEnd}>
+      <div
+        className="
+min-h-screen
+bg-[#0B0F19]
 p-8
 "
-    >
-      <button
-        onClick={() => createTask("My first task")}
-        className="
-bg-black
-text-white
-px-4
-py-2
-rounded
-mb-5
-"
       >
-        Add Task
-      </button>
-      {columns.map((column) => (
-        <div
-          key={column.id}
+        <h1
           className="
-bg-gray-100
-rounded-xl
-p-4
-min-h-[500px]
+text-3xl
+font-bold
+text-white
+mb-8
 "
         >
-          <h2
-            className="
-font-semibold
-mb-4
-"
-          >
-            {column.title}
-          </h2>
+          FlowBoard
+        </h1>
 
-          {tasks
-            .filter((task) => task.status === column.id)
-            .map((task) => (
-              <div
-                key={task.id}
-                className="
-bg-white
-rounded-lg
-p-4
-mb-3
-shadow
+        <div
+          className="
+grid
+grid-cols-1
+md:grid-cols-2
+xl:grid-cols-4
+gap-6
 "
-              >
-                {task.title}
-              </div>
-            ))}
+        >
+          {columns.map((column) => (
+            <Column
+              key={column.id}
+              id={column.id}
+              title={column.title}
+              tasks={tasks.filter((task) => task.status === column.id)}
+            />
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </DndContext>
   );
 }
