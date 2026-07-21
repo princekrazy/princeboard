@@ -5,13 +5,18 @@ import Comments from "./Comments";
 import AssignLabels from "./AssignLabels";
 import ActivityTimeline from "./ActivityTimeline";
 import { useTasks } from "../../hooks/useTasks";
+import { useTaskStore } from "../../store/taskStore";
 interface Props {
   deleteTask: (id: string) => void;
   loadTasks: () => void;
 }
 
 export default function TaskDetails({ deleteTask, loadTasks }: Props) {
-  const task = useBoardStore((state) => state.selectedTask);
+  const selectedTaskId = useBoardStore((state) => state.selectedTaskId);
+
+  const tasks = useTaskStore((state) => state.tasks);
+
+  const task = tasks.find((task) => task.id === selectedTaskId);
 
   const close = useBoardStore((state) => state.closeTask);
 

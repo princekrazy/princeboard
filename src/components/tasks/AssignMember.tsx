@@ -1,6 +1,7 @@
 import { useMembers } from "../../hooks/useMembers";
 
 import { useAssignments } from "../../hooks/useAssignments";
+import { useTaskStore } from "../../store/taskStore";
 
 interface Props {
   taskId: string;
@@ -15,6 +16,9 @@ export default function AssignMembers({
   assigned,
   refresh,
 }: Props) {
+  const updateTaskAssignees = useTaskStore(
+    (state) => state.updateTaskAssignees,
+  );
   const { members } = useMembers();
 
   const { assignMember, removeMember } = useAssignments();
@@ -60,13 +64,24 @@ cursor-pointer
               type="checkbox"
               checked={isAssigned(member.id)}
               onChange={async (e) => {
+                let updatedAssignments = [...assigned];
+
                 if (e.target.checked) {
                   await assignMember(taskId, member.id);
+
+                  updatedAssignments.push({
+                    member_id: member.id,
+                    members: member,
+                  });
                 } else {
                   await removeMember(taskId, member.id);
+
+                  updatedAssignments = updatedAssignments.filter(
+                    (item) => item.member_id !== member.id,
+                  );
                 }
 
-                await refresh();
+                updateTaskAssignees(taskId, updatedAssignments);
               }}
             />
 

@@ -1,6 +1,7 @@
 import { useLabels } from "../../hooks/useLabels";
 
 import { supabase } from "../../lib/supabase";
+import { useTaskStore } from "../../store/taskStore";
 interface Props {
   taskId: string;
 
@@ -14,6 +15,7 @@ export default function AssignLabels({
   assigned,
   refresh,
 }: Props) {
+  const updateTaskLabels = useTaskStore((state) => state.updateTaskLabels);
   const { labels } = useLabels();
 
   function isAssigned(id: string) {
@@ -21,6 +23,8 @@ export default function AssignLabels({
   }
 
   async function toggle(labelId: string, checked: boolean) {
+    let updatedLabels = [...assigned];
+
     if (checked) {
       await supabase
 
@@ -31,6 +35,16 @@ export default function AssignLabels({
 
           label_id: labelId,
         });
+
+      const label = labels.find((l) => l.id === labelId);
+
+      if (label) {
+        updatedLabels.push({
+          label_id: labelId,
+
+          labels: label,
+        });
+      }
     } else {
       await supabase
 
@@ -41,7 +55,11 @@ export default function AssignLabels({
         .eq("task_id", taskId)
 
         .eq("label_id", labelId);
+
+      updatedLabels = updatedLabels.filter((item) => item.label_id !== labelId);
     }
+
+    updateTaskLabels(taskId, updatedLabels);
   }
 
   return (
@@ -61,7 +79,7 @@ mb-2
           <input
             type="checkbox"
             checked={isAssigned(label.id)}
-            onChange={(e) => toggle(label.id, e.target.checked)}
+            onChange={async (e) => await toggle(label.id, e.target.checked)}
           />
 
           <span

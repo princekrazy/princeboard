@@ -1,24 +1,23 @@
 import { create } from "zustand";
-import type { Task } from "../types/database";
 
 interface BoardStore {
-  selectedTask: Task | null;
+  selectedTaskId: string | null;
 
-  openTask: (task: Task) => void;
+  openTask: (id: string) => void;
 
   closeTask: () => void;
 }
 
 export const useBoardStore = create<BoardStore>((set) => ({
-  selectedTask: null,
+  selectedTaskId: null,
 
-  openTask: (task) =>
+  openTask: (id) =>
     set({
-      selectedTask: task,
+      selectedTaskId: id,
     }),
 
   closeTask: () =>
     set({
-      selectedTask: null,
+      selectedTaskId: null,
     }),
 }));

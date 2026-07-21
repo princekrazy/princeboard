@@ -1,32 +1,96 @@
-# React + TypeScript + Vite
+# PrinceBoard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern Kanban-style task management application inspired by tools like Linear, Asana, and Notion.
 
-Currently, two official plugins are available:
+PrinceBoard helps teams visually organize work through customizable boards, task assignments, labels, comments, and activity tracking. The application provides a smooth project management experience with real-time persistence powered by Supabase.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Screenshots
 
-## React Compiler
+![alt text](<Screenshot 2026-07-21 214330.png>)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Features
 
-## Expanding the Oxlint configuration
+## Kanban Board
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- Drag and drop tasks between columns
+- Default workflow columns:
+  - To Do
+  - In Progress
+  - In Review
+  - Done
+- Tasks update instantly when moved
+- Persistent task status storage
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+---
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Guest Authentication
+
+- Automatic anonymous account creation
+- No email/password required
+- Each user receives a unique workspace
+- Row Level Security ensures users only access their own data
+
+---
+
+## Task Management
+
+Create and manage tasks with:
+
+- Title
+- Description
+- Priority level
+- Due dates
+- Status tracking
+
+Tasks are persisted securely through Supabase.
+
+---
+
+## Team Members & Assignments
+
+Create a workspace team and assign members to tasks.
+
+Features:
+
+- Add team members
+- Custom avatar colors
+- Assign members to tasks
+- Display assigned users on task cards
+
+---
+
+## ️ Labels & Tags
+
+Organize tasks with custom labels.
+
+Examples:
+
+- Bug
+- Feature
+- Design
+- Backend
+
+Features:
+
+- Create custom labels
+- Assign multiple labels to tasks
+- Display labels on task cards
+- Filter tasks by labels
+
+---
+
+## Comments
+
+Collaborate directly inside tasks.
+
+Features:
+
+- Add comments
+- View chronological discussion history
+- Store comments separately from tasks
+
+---
+
+## Activity Timeline
+
+Track task history:

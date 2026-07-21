@@ -23,7 +23,7 @@ export default function TaskCard({ task }: Props) {
 
   return (
     <motion.div
-      onClick={() => openTask(task)}
+      onClick={() => openTask(task.id)}
       ref={setNodeRef}
       style={style}
       whileHover={{
