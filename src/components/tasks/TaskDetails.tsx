@@ -4,7 +4,7 @@ import { useBoardStore } from "../../store/boardStore";
 import Comments from "./Comments";
 import AssignLabels from "./AssignLabels";
 import ActivityTimeline from "./ActivityTimeline";
-import { useTasks } from "../../hooks/useTasks";
+
 import { useTaskStore } from "../../store/taskStore";
 interface Props {
   deleteTask: (id: string) => void;

@@ -14,7 +14,6 @@ export default function AssignMembers({
   taskId,
 
   assigned,
-  refresh,
 }: Props) {
   const updateTaskAssignees = useTaskStore(
     (state) => state.updateTaskAssignees,

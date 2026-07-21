@@ -1,5 +1,3 @@
-import { Search } from "lucide-react";
-
 import { useFilterStore } from "../../store/filterStore";
 
 export default function SearchBar() {

@@ -13,7 +13,6 @@ export default function AssignLabels({
   taskId,
 
   assigned,
-  refresh,
 }: Props) {
   const updateTaskLabels = useTaskStore((state) => state.updateTaskLabels);
   const { labels } = useLabels();

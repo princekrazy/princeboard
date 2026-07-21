@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Settings, Tag } from "lucide-react";
+import { LayoutDashboard, Users, Tag } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
 
