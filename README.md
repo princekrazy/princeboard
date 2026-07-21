@@ -4,6 +4,12 @@ A modern Kanban-style task management application inspired by tools like Linear,
 
 PrinceBoard helps teams visually organize work through customizable boards, task assignments, labels, comments, and activity tracking. The application provides a smooth project management experience with real-time persistence powered by Supabase.
 
+## Live Demo
+
+Try PrinceBoard here:
+
+https://princeboard-tau.vercel.app/
+
 ## Screenshots
 
 ![alt text](<Screenshot 2026-07-21 214330.png>)
