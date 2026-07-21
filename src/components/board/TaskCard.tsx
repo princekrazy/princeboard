@@ -7,7 +7,7 @@ import { Grip } from "lucide-react";
 interface Props {
   task: Task;
 }
-
+import DueDateBadge from "../tasks/DueDateBadge";
 export default function TaskCard({ task }: Props) {
   const openTask = useBoardStore((state) => state.openTask);
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -31,12 +31,15 @@ export default function TaskCard({ task }: Props) {
       }}
       className="
 bg-[#151B2B]
+hover:bg-[#1B2438]
+transition-all
 text-white
 rounded-xl
 p-4
 mb-3
 border
-border-white/10
+border-white/5
+hover:border-emerald-500/40
 shadow-lg
 "
     >
@@ -76,6 +79,74 @@ ${
       >
         {task.priority}
       </span>
+      {/* Assignees */}
+      <div
+        className="
+  flex
+  -space-x-2
+  mt-4
+  "
+      >
+        {task.task_assignees?.map((assignment) => (
+          <div
+            key={assignment.member_id}
+            className="
+      h-7
+      w-7
+      rounded-full
+      flex
+      items-center
+      justify-center
+      text-xs
+      text-white
+      border
+      border-[#151B2B]
+      "
+            style={{
+              backgroundColor: assignment.members.avatar_color,
+            }}
+          >
+            {assignment.members.name[0]}
+          </div>
+        ))}
+      </div>
+
+      {/* Due date */}
+      <div
+        className="
+  mt-3
+  "
+      >
+        <DueDateBadge dueDate={task.due_date} />
+      </div>
+
+      {/* Labels */}
+      <div
+        className="
+  flex
+  gap-2
+  flex-wrap
+  mt-3
+  "
+      >
+        {task.task_labels?.map((item) => (
+          <span
+            key={item.label_id}
+            className="
+      text-xs
+      px-2
+      py-1
+      rounded-full
+      "
+            style={{
+              backgroundColor: item.labels.color + "30",
+              color: item.labels.color,
+            }}
+          >
+            {item.labels.name}
+          </span>
+        ))}
+      </div>
     </motion.div>
   );
 }

@@ -1,8 +1,9 @@
 import { X, Trash2 } from "lucide-react";
-
+import AssignMembers from "./AssignMember";
 import { useBoardStore } from "../../store/boardStore";
-
-import { useTasks } from "../../hooks/useTasks";
+import Comments from "./Comments";
+import AssignLabels from "./AssignLabels";
+import ActivityTimeline from "./ActivityTimeline";
 interface Props {
   deleteTask: (id: string) => void;
 }
@@ -40,6 +41,7 @@ p-6
 text-white
 z-40
 shadow-xl
+overflow-y-auto
 "
       >
         <div
@@ -102,6 +104,8 @@ space-y-3
             </div>
           )}
         </div>
+        <AssignMembers taskId={task.id} assigned={task.task_assignees || []} />
+        <AssignLabels taskId={task.id} assigned={task.task_labels || []} />
 
         <button
           onClick={() => {
@@ -120,6 +124,9 @@ hover:text-red-300
           <Trash2 size={18} />
           Delete Task
         </button>
+
+        <Comments taskId={task.id} />
+        <ActivityTimeline taskId={task.id} />
       </div>
     </>
   );

@@ -18,38 +18,39 @@ export default function Column({ title, id, tasks }: Props) {
   const { setNodeRef } = useDroppable({
     id,
   });
+
   return (
     <div
       ref={setNodeRef}
       className="
-bg-[#111827]
-rounded-2xl
-p-4
-min-h-[550px]
-w-full
-"
+      bg-[#111827]
+      rounded-2xl
+      p-4
+      min-h-[550px]
+      w-full
+      "
     >
       <div
         className="
-flex
-justify-between
-mb-4
-"
+        flex
+        justify-between
+        mb-4
+        "
       >
         <h2
           className="
-text-white
-font-semibold
-"
+          text-white
+          font-semibold
+          "
         >
           {title}
         </h2>
 
         <span
           className="
-text-gray-400
-text-sm
-"
+          text-gray-400
+          text-sm
+          "
         >
           {tasks.length}
         </span>
@@ -59,9 +60,20 @@ text-sm
         items={tasks.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
-        ))}
+        {tasks.length === 0 ? (
+          <p
+            className="
+            text-gray-500
+            text-sm
+            text-center
+            mt-10
+            "
+          >
+            No tasks yet
+          </p>
+        ) : (
+          tasks.map((task) => <TaskCard key={task.id} task={task} />)
+        )}
       </SortableContext>
     </div>
   );

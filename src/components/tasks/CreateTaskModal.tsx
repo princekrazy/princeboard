@@ -153,8 +153,8 @@ mb-5
           onClick={submit}
           className="
 w-full
-bg-indigo-600
-hover:bg-indigo-700
+bg-emerald-600
+hover:bg-emerald-700
 rounded-lg
 py-3
 font-medium

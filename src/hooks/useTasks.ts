@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import type { Task, TaskStatus } from "../types/database";
-
+import toast from "react-hot-toast";
+import { logActivity } from "../lib/activity";
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
@@ -10,8 +11,29 @@ export function useTasks() {
     setLoading(true);
 
     const { data, error } = await supabase
+
       .from("tasks")
-      .select("*")
+
+      .select(
+        `
+
+*,
+task_labels(
+label_id,
+labels(*)
+),
+
+task_assignees(
+
+member_id,
+
+members(*)
+
+)
+
+`,
+      )
+
       .order("created_at", {
         ascending: false,
       });
@@ -56,6 +78,7 @@ export function useTasks() {
 
       return;
     }
+    toast.success("Task created");
 
     setTasks((prev) => [data, ...prev]);
   }
@@ -67,6 +90,7 @@ export function useTasks() {
 
       return;
     }
+    toast.success("Task deleted");
 
     setTasks((prev) => prev.filter((task) => task.id !== id));
   }
@@ -78,7 +102,11 @@ export function useTasks() {
         status,
       })
       .eq("id", id);
+    await logActivity(
+      id,
 
+      `Moved task to ${status}`,
+    );
     if (error) {
       console.error(error);
     } else {

@@ -1,11 +1,8 @@
-import KanbanBoard from "./components/board/KanbanBoard";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
 
 function App() {
-  return (
-    <div>
-      <KanbanBoard />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
