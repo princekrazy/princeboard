@@ -29,7 +29,6 @@ export default function KanbanBoard() {
   const { search, priority } = useFilterStore();
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
-  const { deleteTask } = useTasks();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -43,9 +42,10 @@ export default function KanbanBoard() {
     tasks,
 
     loading,
-
+    deleteTask,
     updateStatus,
     createTask,
+    loadTasks,
   } = useTasks();
 
   if (loading)
@@ -199,7 +199,7 @@ gap-6
           createTask={createTask}
         />
       </div>
-      <TaskDetails deleteTask={deleteTask} />
+      <TaskDetails deleteTask={deleteTask} loadTasks={loadTasks} />
     </DndContext>
   );
 }

@@ -1,16 +1,19 @@
 import { useLabels } from "../../hooks/useLabels";
 
 import { supabase } from "../../lib/supabase";
+interface Props {
+  taskId: string;
+
+  assigned: any[];
+  refresh: () => void;
+}
 
 export default function AssignLabels({
   taskId,
 
   assigned,
-}: {
-  taskId: string;
-
-  assigned: any[];
-}) {
+  refresh,
+}: Props) {
   const { labels } = useLabels();
 
   function isAssigned(id: string) {

@@ -75,6 +75,7 @@ members(*)
 
     if (error) {
       console.error(error);
+      toast.error("Task not created: " + error);
 
       return;
     }
@@ -87,10 +88,12 @@ members(*)
 
     if (error) {
       console.error(error);
+      toast.error("Task not deleted: " + error);
 
       return;
     }
     toast.success("Task deleted");
+    await loadTasks();
 
     setTasks((prev) => prev.filter((task) => task.id !== id));
   }
@@ -136,5 +139,6 @@ members(*)
 
     updateStatus,
     deleteTask,
+    loadTasks,
   };
 }

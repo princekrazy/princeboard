@@ -6,12 +6,14 @@ interface Props {
   taskId: string;
 
   assigned: any[];
+  refresh: () => void;
 }
 
 export default function AssignMembers({
   taskId,
 
   assigned,
+  refresh,
 }: Props) {
   const { members } = useMembers();
 
@@ -57,12 +59,14 @@ cursor-pointer
             <input
               type="checkbox"
               checked={isAssigned(member.id)}
-              onChange={(e) => {
+              onChange={async (e) => {
                 if (e.target.checked) {
-                  assignMember(taskId, member.id);
+                  await assignMember(taskId, member.id);
                 } else {
-                  removeMember(taskId, member.id);
+                  await removeMember(taskId, member.id);
                 }
+
+                await refresh();
               }}
             />
 

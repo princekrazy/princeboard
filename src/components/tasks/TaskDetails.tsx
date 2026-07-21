@@ -4,11 +4,13 @@ import { useBoardStore } from "../../store/boardStore";
 import Comments from "./Comments";
 import AssignLabels from "./AssignLabels";
 import ActivityTimeline from "./ActivityTimeline";
+import { useTasks } from "../../hooks/useTasks";
 interface Props {
   deleteTask: (id: string) => void;
+  loadTasks: () => void;
 }
 
-export default function TaskDetails({ deleteTask }: Props) {
+export default function TaskDetails({ deleteTask, loadTasks }: Props) {
   const task = useBoardStore((state) => state.selectedTask);
 
   const close = useBoardStore((state) => state.closeTask);
@@ -104,8 +106,16 @@ space-y-3
             </div>
           )}
         </div>
-        <AssignMembers taskId={task.id} assigned={task.task_assignees || []} />
-        <AssignLabels taskId={task.id} assigned={task.task_labels || []} />
+        <AssignMembers
+          taskId={task.id}
+          assigned={task.task_assignees || []}
+          refresh={loadTasks}
+        />
+        <AssignLabels
+          taskId={task.id}
+          assigned={task.task_labels || []}
+          refresh={loadTasks}
+        />
 
         <button
           onClick={() => {
